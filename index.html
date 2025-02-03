@@ -4,71 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat de ENERGY</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .chat-box {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #fafafa;
-            margin-bottom: 10px;
-        }
-        .input-container {
-            display: flex;
-            align-items: center;
-        }
-        .input-container input {
-            width: 80%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .input-container button {
-            margin-left: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .input-container button:hover {
-            background-color: #0056b3;
-        }
-        .emoji-btns button {
-            background-color: transparent;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            margin: 0 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="chat-container">
         <h2>Bienvenido al chat de ENERGY</h2>
-        <div class="chat-box" id="chatBox">
-            <!-- Aquí aparecerán los mensajes -->
-        </div>
-
+        <div class="chat-box" id="chatBox"></div>
+        
         <div class="emoji-btns">
-            <!-- Botones de emoji -->
             <button onclick="addEmoji('😊')">😊</button>
             <button onclick="addEmoji('😂')">😂</button>
             <button onclick="addEmoji('❤️')">❤️</button>
@@ -77,13 +20,20 @@
         </div>
 
         <div class="input-container">
-            <input type="text" id="messageInput" placeholder="Escribe un mensaje...">
+            <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleKeyPress(event)">
             <button onclick="sendMessage()">Enviar</button>
+        </div>
+
+        <input type="file" id="fileInput" multiple>
+        <button onclick="sendFile()">Enviar Archivo</button>
+
+        <div class="file-storage" id="fileStorage">
+            <h3>Archivos Guardados:</h3>
+            <ul id="fileList"></ul>
         </div>
     </div>
 
     <script>
-        // Función para enviar mensajes
         function sendMessage() {
             const messageInput = document.getElementById('messageInput');
             const messageText = messageInput.value;
@@ -97,15 +47,31 @@
             }
         }
 
-        // Función para agregar emoji al mensaje
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
         function addEmoji(emoji) {
             const messageInput = document.getElementById('messageInput');
             messageInput.value += emoji;
         }
-    </script>
 
+        function sendFile() {
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            
+            for (const file of fileInput.files) {
+                const listItem = document.createElement('li');
+                listItem.textContent = file.name;
+                fileList.appendChild(listItem);
+            }
+        }
+    </script>
 </body>
 </html>
+
 
 
 
