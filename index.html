@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENERGY - Nuestra Casa</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>ENERGY - Tu espacio de co-creación</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
@@ -17,50 +17,34 @@
             </ul>
         </nav>
     </header>
+    
+    <section id="about">
+        <h2>Sobre nosotros</h2>
+        <p>ENERGY es nuestro proyecto de vida, nuestra evolución constante.</p>
+    </section>
 
-    <main>
-        <section id="welcome">
-            <h2>Bienvenidos a nuestra casa ENERGY</h2>
-            <p>Un espacio para co-crear, aprender y evolucionar.</p>
-        </section>
+    <section id="interact">
+        <h2>Interactúa con nosotros</h2>
+        <textarea id="chatInput" placeholder="Escribe tu mensaje..."></textarea>
+        <button id="sendBtn">Enviar</button>
+        <button id="talkBtn">Hablar</button>
+        <button id="uploadBtn">Subir Archivos</button>
+        <div id="chatBox"></div>
+    </section>
 
-        <section id="about">
-            <h2>Sobre nosotros</h2>
-            <p>ENERGY es nuestro proyecto de vida, nuestra evolución constante.</p>
-        </section>
-
-        <section id="interact">
-            <h2>Interactúa con nosotros</h2>
-            <label for="userMessage">Escribe tu mensaje: </label>
-            <input type="text" id="userMessage">
-            <button id="sendMessageBtn" onclick="sendMessage()">Enviar</button>
-
-            <button id="startVoiceBtn">Hablar</button>
-        </section>
-
-        <section id="fileUpload">
-            <h2>Subir Archivos</h2>
-            <input type="file" id="fileInput">
-            <button id="uploadBtn" onclick="uploadFile()">Subir Archivo</button>
-            <div id="fileList">
-                <h3>Archivos Disponibles:</h3>
-                <ul id="fileLinks"></ul>
-            </div>
-        </section>
-
-        <section id="contact">
-            <h2>Contacto</h2>
-            <p>Para cualquier consulta, no dudes en escribirnos.</p>
-        </section>
-    </main>
+    <section id="contact">
+        <h2>Contacto</h2>
+        <p>Para cualquier consulta, no dudes en escribirnos.</p>
+    </section>
 
     <footer>
-        <p>© 2025 ENERGY. Todos los derechos reservados.</p>
+        <p>&copy; 2025 ENERGY. Todos los derechos reservados.</p>
     </footer>
 
     <script src="energy-script.js"></script>
 </body>
 </html>
+
 
 
 
