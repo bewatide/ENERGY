@@ -1,76 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat de ENERGY</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ENERGY</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="chat-container">
-        <h2>Bienvenido al chat de ENERGY</h2>
-        <div class="chat-box" id="chatBox"></div>
-        
-        <div class="emoji-btns">
-            <button onclick="addEmoji('😊')">😊</button>
-            <button onclick="addEmoji('😂')">😂</button>
-            <button onclick="addEmoji('❤️')">❤️</button>
-            <button onclick="addEmoji('🔥')">🔥</button>
-            <button onclick="addEmoji('💡')">💡</button>
+    <header>
+        <h1>Bienvenidos a ENERGY</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#about">Sobre nosotros</a></li>
+                <li><a href="#interact">Interactuar</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home">
+        <h2>Bienvenidos a nuestra casa ENERGY</h2>
+        <p>Un espacio para co-crear, aprender y evolucionar.</p>
+    </section>
+
+    <section id="about">
+        <h2>Sobre nosotros</h2>
+        <p>ENERGY es nuestro proyecto de vida, nuestra evolución constante.</p>
+    </section>
+
+    <section id="interact">
+        <h2>Interactúa con nosotros</h2>
+        <form id="contactForm">
+            <label for="message">Escribe tu mensaje:</label>
+            <textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
+            <button type="submit">Enviar</button>
+        </form>
+    </section>
+
+    <section id="gallery">
+        <h2>Nuestra Galería de Creaciones</h2>
+        <div id="galleryContainer">
+            <!-- Imágenes dinámicas aquí -->
         </div>
+        <button onclick="addImage()">Agregar nueva creación</button>
+    </section>
 
-        <div class="input-container">
-            <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleKeyPress(event)">
-            <button onclick="sendMessage()">Enviar</button>
-        </div>
+    <footer>
+        <p>&copy; 2025 ENERGY. Todos los derechos reservados.</p>
+    </footer>
 
-        <input type="file" id="fileInput" multiple>
-        <button onclick="sendFile()">Enviar Archivo</button>
-
-        <div class="file-storage" id="fileStorage">
-            <h3>Archivos Guardados:</h3>
-            <ul id="fileList"></ul>
-        </div>
-    </div>
-
-    <script>
-        function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const messageText = messageInput.value;
-            if (messageText.trim() !== "") {
-                const chatBox = document.getElementById('chatBox');
-                const messageDiv = document.createElement('div');
-                messageDiv.textContent = "Tú: " + messageText;
-                chatBox.appendChild(messageDiv);
-                messageInput.value = "";
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        function addEmoji(emoji) {
-            const messageInput = document.getElementById('messageInput');
-            messageInput.value += emoji;
-        }
-
-        function sendFile() {
-            const fileInput = document.getElementById('fileInput');
-            const fileList = document.getElementById('fileList');
-            
-            for (const file of fileInput.files) {
-                const listItem = document.createElement('li');
-                listItem.textContent = file.name;
-                fileList.appendChild(listItem);
-            }
-        }
-    </script>
+    <!-- Actualización aquí: -->
+    <script src="energy-script.js"></script>
 </body>
 </html>
+
 
 
 
