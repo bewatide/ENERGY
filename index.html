@@ -3,16 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Chat en vivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat-box {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .file-preview {
+            margin-top: 10px;
+            max-width: 100%;
+            max-height: 200px;
+        }
+        #audio-control {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Bienvenidos a Energy</h1>
-    <p>Este es el inicio de nuestro proyecto. ¡Exploramos y creamos juntos!</p>
+    <h1>Bienvenidos al Chat Hippie</h1>
 
-    <button>¡Comienza tu viaje energético!</button>
+    <div id="chat-box"></div>
+
+    <textarea id="user-input" rows="3" placeholder="Escribe tu mensaje..."></textarea>
+    <input type="file" id="file-upload">
+    <button onclick="sendMessage()">Enviar</button>
+
+    <div id="audio-control">
+        <button onclick="startVoiceChat()">Iniciar canal de voz</button>
+    </div>
+
+    <script>
+        // Función para mostrar los mensajes en el chat
+        function displayMessage(message, isUser = false) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            if (isUser) messageDiv.style.backgroundColor = '#d3f4ff';  // Diferenciar el mensaje del usuario
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Desplazar al final
+        }
+
+        // Función para enviar un mensaje
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const fileInput = document.getElementById('file-upload');
+
+            const message = userInput.value;
+            if (message.trim()) {
+                displayMessage(message, true);  // Mostrar mensaje del usuario
+                userInput.value = '';  // Limpiar campo de texto
+
+                // Si se ha subido un archivo, mostrar previsualización
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const filePreview = document.createElement('img');
+                    filePreview.src = URL.createObjectURL(file);
+                    filePreview.classList.add('file-preview');
+                    displayMessage(`Archivo: ${file.name}`, false);
+                    document.getElementById('chat-box').appendChild(filePreview);
+                }
+                
+                // Simular respuesta del sistema
+                setTimeout(() => {
+                    displayMessage('Este es un mensaje automático', false);
+                }, 1000);
+            }
+        }
+
+        // Función para manejar el canal de voz
+        function startVoiceChat() {
+            const audioControl = document.getElementById('audio-control');
+            audioControl.innerHTML = `
+                <button onclick="startRecording()">Iniciar grabación</button>
+                <button onclick="stopRecording()">Detener grabación</button>
+                <audio id="audio-player" controls></audio>
+            `;
+        }
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audio-player').src = audioUrl;
+                audioChunks = [];
+            };
+            mediaRecorder.start();
+        }
+
+        function stopRecording() {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+            }
+        }
+    </script>
 
 </body>
 </html>
+
 
