@@ -1,67 +1,44 @@
-// Función para enviar el mensaje desde el input de texto
-function sendMessage() {
-    const userMessage = document.getElementById('userMessage').value;
-    displayMessage(userMessage, true); // Muestra el mensaje escrito
-    const response = generateResponse(userMessage);
-    displayMessage(response, false); // Muestra la respuesta de ENERGY
+document.getElementById('sendBtn').addEventListener('click', function() {
+    let message = document.getElementById('chatInput').value;
+    if (message) {
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
+        document.getElementById('chatInput').value = '';
+    }
+});
 
-    // Responder con voz
-    const speech = new SpeechSynthesisUtterance(response);
-    speech.lang = 'es-ES'; // Configurar el idioma de la voz
-    window.speechSynthesis.speak(speech);
-}
+document.getElementById('talkBtn').addEventListener('click', function() {
+    startVoiceRecognition();
+});
 
-// Función para generar una respuesta (puede ser personalizada más tarde)
-function generateResponse(userMessage) {
-    return `Has dicho: ${userMessage}. ¡Interesante!`;
-}
+document.getElementById('uploadBtn').addEventListener('click', function() {
+    uploadFile();
+});
 
-// Función para mostrar mensajes en el chat
-function displayMessage(message, isUser) {
-    const chatContainer = document.createElement('div');
-    chatContainer.classList.add(isUser ? 'user-message' : 'energy-message');
-    chatContainer.textContent = message;
-    document.body.appendChild(chatContainer);
-}
-
-// Función para iniciar el reconocimiento de voz
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'es-ES'; // Configurar el idioma
-
-recognition.onresult = function(event) {
-    const userMessage = event.results[0][0].transcript;
-    displayMessage(userMessage, true); // Muestra el mensaje hablado
-    const response = generateResponse(userMessage);
-    displayMessage(response, false); // Muestra la respuesta de ENERGY
-
-    // Responder con voz
-    const speech = new SpeechSynthesisUtterance(response);
-    speech.lang = 'es-ES'; // Configurar el idioma de la voz
-    window.speechSynthesis.speak(speech);
-};
-
-// Función para iniciar el reconocimiento de voz cuando el usuario haga clic en el botón
+// Función para el reconocimiento de voz
 function startVoiceRecognition() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'es-ES';
     recognition.start();
-}
-
-// Asignamos la función al botón de voz
-document.getElementById('startVoiceBtn').addEventListener('click', startVoiceRecognition);
-
-// Función para manejar la subida de archivos
-function uploadFile() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-
-    if (file) {
-        const fileLink = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(file);
-        link.download = file.name;
-        link.textContent = `Descargar: ${file.name}`;
-        fileLink.appendChild(link);
-        document.getElementById('fileLinks').appendChild(fileLink);
+    
+    recognition.onresult = function(event) {
+        let transcript = event.results[0][0].transcript;
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>Voz:</strong> ${transcript}</p>`;
     }
 }
+
+// Función para cargar archivos
+function uploadFile() {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = function(event) {
+        let file = event.target.files[0];
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
+    };
+    input.click();
+}
+
 
 
