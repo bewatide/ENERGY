@@ -1,77 +1,97 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
     margin: 0;
     padding: 0;
-    text-align: center;
+    background-color: #f4f4f9;
 }
 
 header {
-    background-color: #2c3e50;
+    background-color: #2196F3;
     color: white;
-    padding: 20px 0;
+    padding: 15px 0;
+    text-align: center;
 }
 
-header nav ul {
+header h1 {
+    margin: 0;
+}
+
+nav ul {
     list-style: none;
     padding: 0;
 }
 
-header nav ul li {
+nav li {
     display: inline;
     margin: 0 15px;
 }
 
-header nav ul li a {
+nav a {
     color: white;
     text-decoration: none;
-    font-size: 18px;
 }
 
-section {
-    margin: 20px;
+main {
     padding: 20px;
 }
 
-form {
-    margin-top: 20px;
-}
-
-textarea {
-    width: 80%;
-    padding: 10px;
-    font-size: 16px;
-}
-
 button {
-    padding: 10px 20px;
-    background-color: #3498db;
+    background-color: #2196F3;
     color: white;
+    padding: 10px 20px;
     border: none;
-    font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #1976D2;
 }
 
-#galleryContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+#fileUpload {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f4f4f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#galleryContainer img {
-    margin: 10px;
+#startVoiceBtn {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+#startVoiceBtn:hover {
+    background-color: #1976D2;
+}
+
+#fileInput {
+    margin-bottom: 10px;
+}
+
+#fileLinks li {
+    margin-bottom: 10px;
 }
 
 footer {
-    margin-top: 20px;
-    background-color: #2c3e50;
-    color: white;
+    text-align: center;
     padding: 10px;
+    background-color: #2196F3;
+    color: white;
 }
+
+.user-message {
+    color: blue;
+    font-weight: bold;
+}
+
+.energy-message {
+    color: green;
+    font-style: italic;
+}
+
 
