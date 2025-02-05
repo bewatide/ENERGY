@@ -1,6 +1,6 @@
 // Importa las funciones necesarias del SDK de Firebase
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
@@ -18,6 +18,20 @@ const app = initializeApp(firebaseConfig);
 // Obtén la base de datos de Firestore
 const db = getFirestore(app);
 
+// Función para guardar el mensaje en Firestore
+async function saveMessage(message) {
+    try {
+        // Referencia a la colección 'messages' en Firestore
+        const docRef = await addDoc(collection(db, "messages"), {
+            text: message,
+            timestamp: new Date() // Guardar la hora del mensaje
+        });
+        console.log("Mensaje guardado con ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error al guardar el mensaje: ", e);
+    }
+}
+
 // Manejo de la interfaz
 document.getElementById('sendBtn').addEventListener('click', function() {
     let message = document.getElementById('chatInput').value;
@@ -25,7 +39,9 @@ document.getElementById('sendBtn').addEventListener('click', function() {
         let chatBox = document.getElementById('chatBox');
         chatBox.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
         document.getElementById('chatInput').value = '';
-        // Aquí podrías agregar la lógica para guardar el mensaje en Firestore
+
+        // Guardar el mensaje en Firestore
+        saveMessage(message);
     }
 });
 
@@ -47,6 +63,9 @@ function startVoiceRecognition() {
         let transcript = event.results[0][0].transcript;
         let chatBox = document.getElementById('chatBox');
         chatBox.innerHTML += `<p><strong>Voz:</strong> ${transcript}</p>`;
+
+        // Guardar el mensaje de voz en Firestore
+        saveMessage(transcript);
     }
 }
 
@@ -61,6 +80,7 @@ function uploadFile() {
     };
     input.click();
 }
+
 
 
 
