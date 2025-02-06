@@ -1,6 +1,6 @@
 // Importa las funciones necesarias del SDK de Firebase
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
@@ -80,6 +80,7 @@ function uploadFile() {
     };
     input.click();
 }
+
 
 
 
