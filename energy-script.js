@@ -1,101 +1,128 @@
-// energy-script.js
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { getFirestore, collection, addDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Energy Chat</h1>
+    </header>
 
-// Tu configuración de Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyDur25IJLc7nNNGJYrEkDfP-0oQTZO1v8g",
-    authDomain: "energychat-4135c.firebaseapp.com",
-    projectId: "energychat-4135c",
-    storageBucket: "energychat-4135c.firebasestorage.app",
-    messagingSenderId: "266295314261",
-    appId: "1:266295314261:web:0189cb3752f8af22c891dc"
-};
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
 
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
+    <div id="interact">
+        <h2>Chat</h2>
+        <div id="chatBox"></div>
+        <textarea id="chatInput" placeholder="Escribe tu mensaje..."></textarea>
+        <button id="sendBtn">Enviar</button>
+        <button id="talkBtn">Hablar</button>
+        <button id="uploadBtn">Subir archivo</button>
+    </div>
 
-// Obtén la base de datos de Firestore
-const db = getFirestore(app);
+    <!-- Firebase Scripts -->
+    <script type="module">
+        // Usa el CDN correcto para Firebase 9.6.1
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-// Función para guardar el mensaje en Firestore
-async function saveMessage(message) {
-    try {
-        // Referencia a la colección 'messages' en Firestore
-        const docRef = await addDoc(collection(db, "messages"), {
-            text: message,
-            timestamp: new Date() // Guardar la hora del mensaje
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDur25IJLc7nNNGJYrEkDfP-0oQTZO1v8g",
+            authDomain: "energychat-4135c.firebaseapp.com",
+            projectId: "energychat-4135c",
+            storageBucket: "energychat-4135c.firebasestorage.app",
+            messagingSenderId: "266295314261",
+            appId: "1:266295314261:web:0189cb3752f8af22c891dc"
+        };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Obtén la base de datos de Firestore
+        const db = getFirestore(app);
+
+        // Función para guardar el mensaje en Firestore
+        async function saveMessage(message) {
+            try {
+                const docRef = await addDoc(collection(db, "messages"), {
+                    text: message,
+                    timestamp: new Date()
+                });
+                console.log("Mensaje guardado con ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error al guardar el mensaje: ", e);
+            }
+        }
+
+        // Función para escuchar los mensajes en tiempo real
+        function listenForMessages() {
+            const messagesRef = collection(db, "messages");
+            onSnapshot(messagesRef, (querySnapshot) => {
+                let chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML = '';  // Limpiar el chat
+                querySnapshot.forEach((doc) => {
+                    chatBox.innerHTML += `<p><strong>${doc.data().timestamp.toDate().toLocaleString()}:</strong> ${doc.data().text}</p>`;
+                });
+            });
+        }
+
+        listenForMessages();
+
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            let message = document.getElementById('chatInput').value;
+            if (message) {
+                let chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
+                document.getElementById('chatInput').value = '';
+                saveMessage(message);
+            }
         });
-        console.log("Mensaje guardado con ID: ", docRef.id);
-    } catch (e) {
-        console.error("Error al guardar el mensaje: ", e);
-    }
-}
 
-// Función para escuchar los mensajes en tiempo real
-function listenForMessages() {
-    const messagesRef = collection(db, "messages");
-    onSnapshot(messagesRef, (querySnapshot) => {
-        let chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML = '';  // Limpiar el chat
-        querySnapshot.forEach((doc) => {
-            chatBox.innerHTML += `<p><strong>${doc.data().timestamp.toDate().toLocaleString()}:</strong> ${doc.data().text}</p>`;
+        document.getElementById('talkBtn').addEventListener('click', function() {
+            startVoiceRecognition();
         });
-    });
-}
 
-// Llamamos a la función para empezar a escuchar los mensajes
-listenForMessages();
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            uploadFile();
+        });
 
-// Manejo de la interfaz
-document.getElementById('sendBtn').addEventListener('click', function() {
-    let message = document.getElementById('chatInput').value;
-    if (message) {
-        let chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
-        document.getElementById('chatInput').value = '';
+        function startVoiceRecognition() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'es-ES';
+            recognition.start();
 
-        // Guardar el mensaje en Firestore
-        saveMessage(message);
-    }
-});
+            recognition.onresult = function(event) {
+                let transcript = event.results[0][0].transcript;
+                let chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML += `<p><strong>Voz:</strong> ${transcript}</p>`;
+                saveMessage(transcript);
+            };
+        }
 
-document.getElementById('talkBtn').addEventListener('click', function() {
-    startVoiceRecognition();
-});
+        function uploadFile() {
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = function(event) {
+                let file = event.target.files[0];
+                let chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
+                saveMessage(file.name);
+            };
+            input.click();
+        }
+    </script>
+</body>
+</html>
 
-document.getElementById('uploadBtn').addEventListener('click', function() {
-    uploadFile();
-});
-
-// Función para el reconocimiento de voz
-function startVoiceRecognition() {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'es-ES';
-    recognition.start();
-    
-    recognition.onresult = function(event) {
-        let transcript = event.results[0][0].transcript;
-        let chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<p><strong>Voz:</strong> ${transcript}</p>`;
-
-        // Guardar el mensaje de voz en Firestore
-        saveMessage(transcript);
-    }
-}
-
-// Función para cargar archivos
-function uploadFile() {
-    let input = document.createElement('input');
-    input.type = 'file';
-    input.onchange = function(event) {
-        let file = event.target.files[0];
-        let chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
-        saveMessage(file.name);
-    };
-    input.click();
-}
 
 
 
