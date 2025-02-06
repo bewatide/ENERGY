@@ -91,7 +91,13 @@ function uploadFile() {
     input.onchange = function(event) {
         let file = event.target.files[0];
         let chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<p><strong>Archivo:</strong> $
+        chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
+        
+        // Aquí puedes añadir la lógica para cargar el archivo, si es necesario
+    };
+    input.click();
+}
+
 
 
 
