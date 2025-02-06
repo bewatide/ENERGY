@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- Importa el SDK de Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    </script>
 </head>
 <body>
     <header>
@@ -45,9 +47,10 @@
         <p>&copy; 2025 ENERGY. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="energy-script.js" type="module"></script>
+    <script type="module" src="energy-script.js"></script>
 </body>
 </html>
+
 
 
 
