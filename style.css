@@ -1,67 +1,99 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
+// energy-script.js
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+// Tu configuración de Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDur25IJLc7nNNGJYrEkDfP-0oQTZO1v8g",
+    authDomain: "energychat-4135c.firebaseapp.com",
+    projectId: "energychat-4135c",
+    storageBucket: "energychat-4135c.firebasestorage.app",
+    messagingSenderId: "266295314261",
+    appId: "1:266295314261:web:0189cb3752f8af22c891dc"
+};
+
+// Inicializa Firebase
+const app = initializeApp(firebaseConfig);
+
+// Obtén la base de datos de Firestore
+const db = getFirestore(app);
+
+// Función para guardar el mensaje en Firestore
+async function saveMessage(message) {
+    try {
+        // Referencia a la colección 'messages' en Firestore
+        const docRef = await addDoc(collection(db, "messages"), {
+            text: message,
+            timestamp: new Date() // Guardar la hora del mensaje
+        });
+        console.log("Mensaje guardado con ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error al guardar el mensaje: ", e);
+    }
 }
 
-header {
-    background-color: #3a3a3a;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
+// Función para escuchar los mensajes en tiempo real
+function listenForMessages() {
+    const messagesRef = collection(db, "messages");
+    onSnapshot(messagesRef, (querySnapshot) => {
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = '';  // Limpiar el chat
+        querySnapshot.forEach((doc) => {
+            chatBox.innerHTML += `<p><strong>${doc.data().timestamp.toDate().toLocaleString()}:</strong> ${doc.data().text}</p>`;
+        });
+    });
 }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
+// Llamamos a la función para empezar a escuchar los mensajes
+listenForMessages();
+
+// Manejo de la interfaz
+document.getElementById('sendBtn').addEventListener('click', function() {
+    let message = document.getElementById('chatInput').value;
+    if (message) {
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
+        document.getElementById('chatInput').value = '';
+
+        // Guardar el mensaje en Firestore
+        saveMessage(message);
+    }
+});
+
+document.getElementById('talkBtn').addEventListener('click', function() {
+    startVoiceRecognition();
+});
+
+document.getElementById('uploadBtn').addEventListener('click', function() {
+    uploadFile();
+});
+
+// Función para el reconocimiento de voz
+function startVoiceRecognition() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'es-ES';
+    recognition.start();
+    
+    recognition.onresult = function(event) {
+        let transcript = event.results[0][0].transcript;
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>Voz:</strong> ${transcript}</p>`;
+
+        // Guardar el mensaje de voz en Firestore
+        saveMessage(transcript);
+    }
 }
 
-nav ul li {
-    display: inline;
-    margin: 0 10px;
+// Función para cargar archivos
+function uploadFile() {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = function(event) {
+        let file = event.target.files[0];
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
+        saveMessage(file.name);
+    };
+    input.click();
 }
 
-h2 {
-    color: #3a3a3a;
-}
-
-#interact {
-    margin: 20px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#chatBox {
-    border: 1px solid #ddd;
-    padding: 10px;
-    height: 200px;
-    overflow-y: scroll;
-    margin-bottom: 10px;
-    background-color: #fafafa;
-}
-
-textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #3a3a3a;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
-}
-
-button:hover {
-    background-color: #575757;
-}
