@@ -1,7 +1,3 @@
-// Importa las funciones necesarias del SDK de Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
 // Tu configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDur25IJLc7nNNGJYrEkDfP-0oQTZO1v8g",
@@ -13,16 +9,16 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 
 // Obtén la base de datos de Firestore
-const db = getFirestore(app);
+const db = firebase.firestore();
 
 // Función para guardar el mensaje en Firestore
 async function saveMessage(message) {
     try {
         // Referencia a la colección 'messages' en Firestore
-        const docRef = await addDoc(collection(db, "messages"), {
+        const docRef = await db.collection("messages").add({
             text: message,
             timestamp: new Date() // Guardar la hora del mensaje
         });
@@ -34,8 +30,8 @@ async function saveMessage(message) {
 
 // Función para escuchar los mensajes en tiempo real
 function listenForMessages() {
-    const messagesRef = collection(db, "messages");
-    onSnapshot(messagesRef, (querySnapshot) => {
+    const messagesRef = db.collection("messages");
+    messagesRef.onSnapshot((querySnapshot) => {
         let chatBox = document.getElementById('chatBox');
         chatBox.innerHTML = '';  // Limpiar el chat
         querySnapshot.forEach((doc) => {
@@ -97,6 +93,7 @@ function uploadFile() {
     };
     input.click();
 }
+
 
 
 
