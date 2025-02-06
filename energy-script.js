@@ -1,6 +1,6 @@
 // Importa las funciones necesarias del SDK de Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, onSnapshot } from "firebase/firestore";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
@@ -31,6 +31,21 @@ async function saveMessage(message) {
         console.error("Error al guardar el mensaje: ", e);
     }
 }
+
+// Función para escuchar los mensajes en tiempo real
+function listenForMessages() {
+    const messagesRef = collection(db, "messages");
+    onSnapshot(messagesRef, (querySnapshot) => {
+        let chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = '';  // Limpiar el chat
+        querySnapshot.forEach((doc) => {
+            chatBox.innerHTML += `<p><strong>${doc.data().timestamp.toDate().toLocaleString()}:</strong> ${doc.data().text}</p>`;
+        });
+    });
+}
+
+// Llamamos a la función para empezar a escuchar los mensajes
+listenForMessages();
 
 // Manejo de la interfaz
 document.getElementById('sendBtn').addEventListener('click', function() {
@@ -76,10 +91,8 @@ function uploadFile() {
     input.onchange = function(event) {
         let file = event.target.files[0];
         let chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
-    };
-    input.click();
-}
+        chatBox.innerHTML += `<p><strong>Archivo:</strong> $
+
 
 
 
