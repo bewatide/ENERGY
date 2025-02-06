@@ -1,4 +1,4 @@
-// Tu configuración de Firebase
+// Inicializa Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDur25IJLc7nNNGJYrEkDfP-0oQTZO1v8g",
   authDomain: "energychat-4135c.firebaseapp.com",
@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 // Obtén la base de datos de Firestore
 const db = firebase.firestore();
@@ -17,7 +17,6 @@ const db = firebase.firestore();
 // Función para guardar el mensaje en Firestore
 async function saveMessage(message) {
     try {
-        // Referencia a la colección 'messages' en Firestore
         const docRef = await db.collection("messages").add({
             text: message,
             timestamp: new Date() // Guardar la hora del mensaje
@@ -50,8 +49,6 @@ document.getElementById('sendBtn').addEventListener('click', function() {
         let chatBox = document.getElementById('chatBox');
         chatBox.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
         document.getElementById('chatInput').value = '';
-
-        // Guardar el mensaje en Firestore
         saveMessage(message);
     }
 });
@@ -74,8 +71,6 @@ function startVoiceRecognition() {
         let transcript = event.results[0][0].transcript;
         let chatBox = document.getElementById('chatBox');
         chatBox.innerHTML += `<p><strong>Voz:</strong> ${transcript}</p>`;
-
-        // Guardar el mensaje de voz en Firestore
         saveMessage(transcript);
     }
 }
@@ -88,11 +83,10 @@ function uploadFile() {
         let file = event.target.files[0];
         let chatBox = document.getElementById('chatBox');
         chatBox.innerHTML += `<p><strong>Archivo:</strong> ${file.name}</p>`;
-        
-        // Aquí puedes añadir la lógica para cargar el archivo, si es necesario
     };
     input.click();
 }
+
 
 
 
